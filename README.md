@@ -76,7 +76,9 @@ dms_scheduler/
 *(Place screenshots of your application running here to showcase it on GitHub!)*
 
 1. **Dashboard Interface**
-   ![Dashboard Interface](./assets/dashboard.png)
+   ![Dashboard Interface](
+<img src="./dashboard.png" width="900">)
 
 2. **Gantt Chart & Simulation Report**
-   ![Gantt Chart & Simulation Report](./assets/simulation_report.png)
+   ![Gantt Chart & Simulation Report](
+<img src="./simulation_report.png" width="900">)
