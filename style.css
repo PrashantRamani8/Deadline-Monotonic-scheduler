@@ -1,0 +1,68 @@
+/* 
+=========================================
+   DMS Scheduler - Stylesheet
+   Author: Prashant Ramani
+   Description: Premium Custom Styles for DMS
+=========================================
+*/
+
+/* Custom scrollbars for timeline container, logs, and tables */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.6);
+    border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.2);
+    border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.4);
+    border-radius: 4px;
+}
+
+/* Custom Gantt Chart Timeline Blocks */
+.gantt-block {
+    flex: 0 0 auto;
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: #ffffff;
+    border-right: 1px solid #0f172a; /* slate-950 */
+    user-select: none;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 36px;
+    line-height: 36px;
+}
+
+.gantt-block-idle {
+    background-color: #1e293b; /* slate-800 */
+}
+
+/* Custom Fade-in Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Smooth transitions for metrics and tables */
+.transition-colors-300 {
+    transition: color 0.3s ease, background-color 0.3s ease;
+}

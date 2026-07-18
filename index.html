@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950 text-slate-100 selection:bg-indigo-500 selection:text-white">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DMS Scheduler - Real-Time Systems</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- External stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        rose: {
+                            450: '#fb7185', /* beautiful resume rose-pink color */
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="font-sans antialiased min-h-screen py-10 px-4 md:px-8 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+    
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 pb-6 border-b border-slate-800/80">
+            <div>
+                <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">
+                    Deadline Monotonic Scheduling
+                </h1>
+                <p class="text-slate-400 mt-1 text-sm md:text-base">Real-Time Task Scheduling Simulation (DMS)</p>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <div class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Clock State</div>
+                <div id="simulationClock" class="text-lg font-mono font-bold bg-slate-900 border border-slate-800 text-indigo-400 px-4 py-2 rounded-xl shadow-inner">
+                    Time: 0
+                </div>
+            </div>
+        </header>
+
+        <!-- Concept Explanation -->
+        <div class="bg-indigo-950/20 border border-indigo-500/10 p-5 rounded-2xl mb-8 shadow-lg backdrop-blur-sm">
+            <div class="flex items-start gap-4">
+                <div class="p-3 bg-indigo-500/10 rounded-xl text-indigo-400 shrink-0">
+                    <i class="fas fa-info-circle text-lg"></i>
+                </div>
+                <div>
+                    <h2 class="text-sm font-bold text-indigo-200 uppercase tracking-wider">About DMS Scheduling</h2>
+                    <p class="text-sm text-slate-300 mt-1.5 leading-relaxed">
+                        <strong class="text-white">Deadline Monotonic Scheduling (DMS)</strong> is a priority-driven scheduling algorithm for real-time systems. Tasks are assigned static priorities based on their deadlines: the shorter the relative deadline, the higher the priority.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Process Configurator -->
+        <section class="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 mb-8 shadow-xl backdrop-blur-sm">
+            <h3 class="text-base font-bold text-white mb-4 flex items-center gap-2 uppercase tracking-wider">
+                <i class="fas fa-plus-circle text-blue-400"></i> Configure Processes
+            </h3>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div class="space-y-1.5">
+                    <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Process ID</label>
+                    <input type="text" id="processId" placeholder="e.g. P1" 
+                           class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-700 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-150 font-mono text-sm">
+                </div>
+                
+                <div class="space-y-1.5">
+                    <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Execution Time</label>
+                    <input type="number" id="executionTime" placeholder="e.g. 2" 
+                           class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-700 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-150 text-sm">
+                </div>
+                
+                <div class="space-y-1.5">
+                    <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Deadline</label>
+                    <input type="number" id="deadline" placeholder="e.g. 5" 
+                           class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-700 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-150 text-sm">
+                </div>
+                
+                <div class="space-y-1.5">
+                    <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Period</label>
+                    <input type="number" id="period" placeholder="e.g. 6" 
+                           class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-700 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-150 text-sm">
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4">
+                <button onclick="addProcess()" class="flex-1 p-3 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-blue-500/10 transition duration-200 flex items-center justify-center gap-2">
+                    <i class="fas fa-plus text-xs"></i> Add Process
+                </button>
+                <button onclick="startScheduling()" class="flex-1 p-3 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-emerald-500/10 transition duration-200 flex items-center justify-center gap-2">
+                    <i class="fas fa-play text-xs"></i> Start Simulation
+                </button>
+            </div>
+        </section>
+
+        <!-- Main Dashboard Split Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            <!-- Process Queue (Left/Span 2) -->
+            <div class="lg:col-span-2 bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 shadow-xl flex flex-col backdrop-blur-sm">
+                <h3 class="text-base font-bold text-white mb-4 flex items-center gap-2 uppercase tracking-wider">
+                    <i class="fas fa-list text-indigo-400"></i> Process Queue
+                </h3>
+                
+                <div class="overflow-x-auto custom-scrollbar flex-grow">
+                    <table class="w-full text-sm text-left text-slate-300">
+                        <thead class="text-xs text-slate-400 uppercase bg-slate-950 border-b border-slate-850">
+                            <tr>
+                                <th scope="col" class="px-4 py-3 font-semibold">ID</th>
+                                <th scope="col" class="px-4 py-3 font-semibold">Exec Time</th>
+                                <th scope="col" class="px-4 py-3 font-semibold">Deadline</th>
+                                <th scope="col" class="px-4 py-3 font-semibold">Period</th>
+                                <th scope="col" class="px-4 py-3 font-semibold w-1/3">Progress</th>
+                                <th scope="col" class="px-4 py-3 font-semibold">Status</th>
+                                <th scope="col" class="px-4 py-3 font-semibold text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="processTableBody" class="divide-y divide-slate-800/50">
+                            <tr id="emptyQueueMessage">
+                                <td colspan="7" class="px-4 py-8 text-center text-slate-500 italic">
+                                    Queue is empty. Add processes above.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Stats (Right/Span 1) -->
+            <div class="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 shadow-xl flex flex-col justify-between backdrop-blur-sm">
+                <div>
+                    <h3 class="text-base font-bold text-white mb-6 flex items-center gap-2 uppercase tracking-wider">
+                        <i class="fas fa-chart-pie text-emerald-400"></i> System Metrics
+                    </h3>
+                    
+                    <div class="space-y-6">
+                        <!-- Utilization Card -->
+                        <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl shadow-inner">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">CPU Utilization</span>
+                                <span id="cpuWarningBadge" class="hidden text-[10px] bg-rose-500/10 border border-rose-500/20 text-rose-450 px-2 py-0.5 rounded-full font-bold">Overloaded</span>
+                            </div>
+                            <div id="cpuUtilization" class="text-3xl font-black mt-1 text-slate-500 transition-colors-300">0%</div>
+                        </div>
+
+                        <!-- LCM Card -->
+                        <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl shadow-inner">
+                            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">LCM of Periods</span>
+                            <div id="lcmDisplay" class="text-3xl font-black mt-1 text-indigo-400">0</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 pt-4 border-t border-slate-800/60 text-xs text-slate-500 leading-normal">
+                    Priority is determined dynamically based on task deadlines. Simulation duration is bounded by the LCM of all task periods.
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytical Feasibility (Full Width) -->
+        <div class="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 shadow-xl mb-8 backdrop-blur-sm">
+            <h3 class="text-base font-bold text-white mb-4 flex items-center gap-2 uppercase tracking-wider">
+                <i class="fas fa-clipboard-check text-purple-400"></i> Response Time Analysis
+            </h3>
+            <div id="responseTimeAnalysis" class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-52 overflow-y-auto custom-scrollbar">
+                <div class="sm:col-span-2 text-sm text-slate-500 italic p-4 text-center border border-dashed border-slate-800/60 rounded-xl">
+                    Add processes to generate schedule feasibility analysis.
+                </div>
+            </div>
+        </div>
+
+        <!-- Gantt Chart Panel -->
+        <section class="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 shadow-xl mb-8 backdrop-blur-sm">
+            <h3 class="text-base font-bold text-white mb-4 flex items-center gap-2 uppercase tracking-wider">
+                <i class="fas fa-chart-gantt text-blue-400"></i> Gantt Timeline Chart
+            </h3>
+            <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl overflow-x-auto custom-scrollbar shadow-inner">
+                <div id="ganttChart" class="flex items-center min-h-[44px] gap-0.5">
+                    <div class="text-sm text-slate-500 italic">Gantt chart will be generated here during simulation.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Simulation Results Panel (Hidden until completion) -->
+        <section id="resultsPanel" class="hidden bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 shadow-xl backdrop-blur-sm animate-fade-in">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 pb-4 border-b border-slate-800/80">
+                <h3 class="text-base font-bold text-white flex items-center gap-2 uppercase tracking-wider">
+                    <i class="fas fa-poll-h text-emerald-400"></i> Simulation Performance Report
+                </h3>
+                <div class="flex items-center gap-2 bg-slate-950 border border-slate-850 px-3 py-1.5 rounded-lg">
+                    <span class="text-xs font-semibold text-slate-400 uppercase">Actual CPU Utilization:</span>
+                    <span id="actualCpuUtilization" class="font-mono text-sm font-bold text-emerald-400">0%</span>
+                </div>
+            </div>
+            
+            <div class="overflow-x-auto custom-scrollbar">
+                <table class="w-full text-sm text-left text-slate-300">
+                    <thead class="text-xs text-slate-400 uppercase bg-slate-950 border-b border-slate-850">
+                        <tr>
+                            <th scope="col" class="px-4 py-3 font-semibold">ID</th>
+                            <th scope="col" class="px-4 py-3 font-semibold">Jobs Released</th>
+                            <th scope="col" class="px-4 py-3 font-semibold text-emerald-400">Jobs Completed</th>
+                            <th scope="col" class="px-4 py-3 font-semibold text-rose-450">Missed Deadlines</th>
+                            <th scope="col" class="px-4 py-3 font-semibold">Avg Response Time</th>
+                            <th scope="col" class="px-4 py-3 font-semibold">Avg Turnaround Time</th>
+                            <th scope="col" class="px-4 py-3 font-semibold">Avg Waiting Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsTableBody" class="divide-y divide-slate-800/50">
+                        <!-- Dynamic Results row insertion -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- External script file -->
+    <script src="script.js"></script>
+</body>
+
+</html>
